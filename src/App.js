@@ -1,10 +1,38 @@
 import './App.css';  // Assuming your CSS is saved as App.css
 import logoImage from './Logo.png';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollThreshold = 100; // Adjust this value to change how much scroll is needed before hiding/showing
+
+      if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+        // Scrolling down & passed threshold
+        setIsNavbarVisible(false);
+      } else {
+        // Scrolling up or haven't scrolled enough
+        setIsNavbarVisible(true);
+      }
+
+      setLastScrollTop(scrollTop);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup function
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollTop]); // Dependency array
+
+
   return (
     <div>
-      <nav>
+      <nav className={isNavbarVisible ? 'navbar visible' : 'navbar hidden'}>
         <div className="navbar">
           <div className="logo">
             <img src={logoImage} alt="Logo" className="logo-image" />
