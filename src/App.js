@@ -1,6 +1,12 @@
 import './App.css';
 import logoImage from './Logo.png';
 import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from './Pages/Home.js';
+import About from './Pages/About.js';
+import Gallery from './Pages/Gallery.js';
+import Contact from './Pages/Contact.js';
+// Import other pages like Gallery and Contact
 
 function App() {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
@@ -15,9 +21,9 @@ function App() {
         const scrollThreshold = 100;
 
         if (scrollTop > lastScrollTop.current && scrollTop > scrollThreshold) {
-          setIsNavbarVisible(false);
+          setIsNavbarVisible(false);  // Hide navbar on scroll down
         } else {
-          setIsNavbarVisible(true);
+          setIsNavbarVisible(true);  // Show navbar on scroll up
         }
 
         lastScrollTop.current = scrollTop;
@@ -33,50 +39,38 @@ function App() {
   }, []);
 
   const handleNavClick = (event) => {
-    event.preventDefault();
-    const href = event.currentTarget.getAttribute('href');
-    
-    setIsNavbarVisible(true);
-    isScrollingRef.current = true;
-
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    setTimeout(() => {
-      const targetElement = document.querySelector(href);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        isScrollingRef.current = false;
-      }, 1000); // Adjust this delay as needed
-    }, 0);
+    setIsNavbarVisible(true); // Show the navbar when clicking a link
   };
 
   return (
-    <div>
-      <nav className={isNavbarVisible ? 'navbar visible' : 'navbar hidden'}>
-        <div className="navbar">
-          <div className="logo">
-            <img src={logoImage} alt="Logo" className="logo-image" />
-            <a href="#Home" onClick={handleNavClick}>SMC Dundas</a>
-          </div>
+    <Router>
+      <div>
+        <nav className={isNavbarVisible ? 'navbar visible' : 'navbar hidden'}>
+          <div className="navbar">
+            <div className="logo">
+              <img src={logoImage} alt="Logo" className="logo-image" />
+              <Link to="/" onClick={handleNavClick}>SMC Dundas</Link>
+            </div>
 
-          <ul className="menu">
-            <li><a href="#Home" onClick={handleNavClick}>Home</a></li>
-            <li><a href="#About" onClick={handleNavClick}>About Us</a></li>
-            <li><a href="#Gallery" onClick={handleNavClick}>Gallery</a></li>
-            <li><a href="#Donate" onClick={handleNavClick}>Donate</a></li>
-            <li><a href="#Contact" onClick={handleNavClick}>Contact</a></li>
-          </ul>
-        </div>
-      </nav>
-      <section id="Home">Home Section</section>
-      <section id="About">About Section</section>
-      <section id="Gallery">Gallery Section</section>
-      <section id="Donate">Donate Section</section>
-      <section id="Contact">Contact Section</section>
-    </div>
+            <ul className="menu">
+              <li><Link to="/" onClick={handleNavClick}>Home</Link></li>
+              <li><Link to="/about" onClick={handleNavClick}>About</Link></li>
+              <li><Link to="/gallery" onClick={handleNavClick}>Gallery</Link></li>
+              <li><Link to="/contact" onClick={handleNavClick}>Contact</Link></li>
+            </ul>
+          </div>
+        </nav>
+
+        {/* Routes for navigation */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          {/* Add routes for other pages like Gallery and Contact */}
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
