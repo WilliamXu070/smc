@@ -6,6 +6,7 @@ import Home from './Pages/Home.js';
 import About from './Pages/About.js';
 import Gallery from './Pages/Gallery.js';
 import Contact from './Pages/Contact.js';
+
 // Import other pages like Gallery and Contact
 
 function App() {
@@ -40,6 +41,10 @@ function App() {
 
   const handleNavClick = (event) => {
     setIsNavbarVisible(true); // Show the navbar when clicking a link
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
   };
 
   return (
